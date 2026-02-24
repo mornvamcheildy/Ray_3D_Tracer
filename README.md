@@ -1,4 +1,4 @@
-Ray 3D Tracer
+# Ray 3D Tracer
 
 A high-performance 3D ray tracer built with C++, utilizing multi-threading for efficient rendering.
 
@@ -11,7 +11,9 @@ Support for POSIX threads (pthread)
 Compilation
 To compile the project with optimizations enabled, use the following command in your terminal:
 
+```bash
 g++ -O3 -pthread main.cpp -o ray_tracer
+```
 
 Usage
 When running the executable, you must provide a light contrast value (e.g., 0.5) as a command-line argument: 
