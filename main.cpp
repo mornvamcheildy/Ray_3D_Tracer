@@ -28,16 +28,23 @@ int main()
     std::cout << "--- RAYTRACER INITIALIZED ---\n";
     std::cout << "Target File: " << f_n << "\n";
     std::cout << "Resolution : " << i_w << "x" << i_h << "\n";
-    
+
     std::cout << "Enter contrast/lean value: ";
     double lean;
     std::cin >> lean;
 
     std::ofstream i_f(f_n);
-    i_f << "P3\n" << i_w << ' ' << i_h << "\n255\n";
+    if (!i_f.is_open())
+    {
+        std::cerr << "Error: Could not create the file " << f_n << "\n";
+        return 1; // Exit the program with an error code
+    }
+
+    i_f << "P3\n"
+        << i_w << ' ' << i_h << "\n255\n";
 
     const int i_e_s = 100; // enter numbers from 0 - 100 to mage the image edge smooth instead of stais effect
-    
+
     // Debug Counters
     long long total_rays = 0;
     long long sphere_hits = 0;
@@ -45,8 +52,8 @@ int main()
     for (int j = i_h - 1; j >= 0; --j)
     {
         // Real-time progress and hit reporting
-        std::cerr << "\rRow: " << std::setw(4) << j 
-                  << " | Hits recorded: " << std::setw(8) << sphere_hits 
+        std::cerr << "\rRow: " << std::setw(4) << j
+                  << " | Hits recorded: " << std::setw(8) << sphere_hits
                   << " | Progress: " << (100 - (j * 100 / i_h)) << "% " << std::flush;
 
         for (int i = 0; i < i_w; ++i)
@@ -61,7 +68,7 @@ int main()
 
                 Ray r = cam.get_ray(u, v);
                 double t = hit_sphere(Vec3(0, 0, -1), 0.5, r);
-                
+
                 Vec3 current_sample_color;
 
                 if (t > 0.001)
@@ -93,6 +100,6 @@ int main()
     std::cout << "\nTotal Sphere Hits: " << sphere_hits;
     std::cout << "\nBackground Pixels: " << (total_rays - sphere_hits);
     std::cout << "\nFile saved to    : " << f_n << "\n";
-    
+
     return 0;
 }
