@@ -1,5 +1,6 @@
 #include <iostream>
 #include <fstream>
+#include <iomanip> // For better text alignment
 #include "Vec3.h"
 #include "Ray.h"
 #include "FileHelper.h"
@@ -18,30 +19,35 @@ double hit_sphere(const Vec3 &center, double radius, const Ray &r)
 
 int main()
 {
-    // 1. Get the dynamic filename from your FileHelper
     std::string f_n = FileHelper::file_name();
-
-    // 2. Initialize Camera and extract its properties
     Camera cam(Vec3(0, 0, 0));
 
-    // Use the values directly from the cam object to avoid magic numbers
     int i_w = cam.i_w;
     int i_h = cam.i_h;
 
+    std::cout << "--- RAYTRACER INITIALIZED ---\n";
+    std::cout << "Target File: " << f_n << "\n";
+    std::cout << "Resolution : " << i_w << "x" << i_h << "\n";
+    
     std::cout << "Enter contrast/lean value: ";
     double lean;
     std::cin >> lean;
 
     std::ofstream i_f(f_n);
-    i_f << "P3\n"
-        << i_w << ' ' << i_h << "\n255\n";
+    i_f << "P3\n" << i_w << ' ' << i_h << "\n255\n";
 
-    const int i_e_s = 100; // Samples per pixel for anti-aliasing
+    const int i_e_s = 100; // enter numbers from 0 - 100 to mage the image edge smooth instead of stais effect
+    
+    // Debug Counters
+    long long total_rays = 0;
+    long long sphere_hits = 0;
 
     for (int j = i_h - 1; j >= 0; --j)
     {
-        // Add a progress indicator so you know the render is working
-        std::cerr << "\rScanlines remaining: " << j << ' ' << std::flush;
+        // Real-time progress and hit reporting
+        std::cerr << "\rRow: " << std::setw(4) << j 
+                  << " | Hits recorded: " << std::setw(8) << sphere_hits 
+                  << " | Progress: " << (100 - (j * 100 / i_h)) << "% " << std::flush;
 
         for (int i = 0; i < i_w; ++i)
         {
@@ -49,20 +55,19 @@ int main()
 
             for (int s = 0; s < i_e_s; ++s)
             {
-                // Correctly map pixel coordinates to 0.0 - 1.0 range
+                total_rays++;
                 double u = (double(i) + random_double()) / (i_w - 1);
                 double v = (double(j) + random_double()) / (i_h - 1);
 
-                // Use the camera class to generate the ray
                 Ray r = cam.get_ray(u, v);
-
                 double t = hit_sphere(Vec3(0, 0, -1), 0.5, r);
+                
                 Vec3 current_sample_color;
 
                 if (t > 0.001)
                 {
+                    sphere_hits++; // Increment hit counter
                     Vec3 N = unit_vector(r.at_poin_getter(t) - Vec3(0, 0, -1));
-                    // Apply the 'lean' contrast value to the normal coloring
                     current_sample_color = lean * Vec3(N.get_h() + 1, N.get_v() + 1, N.get_d() + 1);
                 }
                 else
@@ -75,13 +80,19 @@ int main()
                 accumulated_color += current_sample_color;
             }
 
-            // Average the color (Anti-aliasing)
             Vec3 pixel_color = (1.0 / i_e_s) * accumulated_color;
-
             i_f << static_cast<int>(255.999 * pixel_color.get_h()) << ' '
                 << static_cast<int>(255.999 * pixel_color.get_v()) << ' '
                 << static_cast<int>(255.999 * pixel_color.get_d()) << '\n';
         }
     }
-    std::cerr << "\nDone. Image saved as: " << f_n << "\n";
+
+    // Final Report
+    std::cout << "\n\n--- RENDER REPORT ---";
+    std::cout << "\nTotal Rays Fired : " << total_rays;
+    std::cout << "\nTotal Sphere Hits: " << sphere_hits;
+    std::cout << "\nBackground Pixels: " << (total_rays - sphere_hits);
+    std::cout << "\nFile saved to    : " << f_n << "\n";
+    
+    return 0;
 }
