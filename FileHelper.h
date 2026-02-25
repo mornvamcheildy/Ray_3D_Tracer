@@ -14,7 +14,7 @@ public:
     {
 
         // Path to the folder to count from variable declaration and assignement
-        std::string f_p = "./fileb";
+        std::string f_p = "./filea";
 
         std::string f_n = f_p + "/image"; // file name start
         std::string f_x = ".ppm";         // file extension
