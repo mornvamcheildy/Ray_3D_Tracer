@@ -9,22 +9,23 @@ namespace fs = std::filesystem;
 class FileHelper
 {
 public:
-    /* Path to the folder to count from variable declaration and assignement
-    std::string f_p = "./fileb";*/
 
     static std::string file_name()
     {
 
-        std::string f_n = "./fileb/image"; // file name start
-        std::string f_x = ".ppm";          // file extension
+        // Path to the folder to count from variable declaration and assignement
+        std::string f_p = "./fileb";
 
-        if (!fs::exists("./fileb") || !fs::is_directory("./fileb"))
+        std::string f_n = f_p + "/image"; // file name start
+        std::string f_x = ".ppm";         // file extension
+
+        if (!fs::exists(f_p) || !fs::is_directory(f_p))
         {
             return f_n + f_x;
         }
 
         int count = 0;
-        for (const auto &entry : fs::directory_iterator("./fileb"))
+        for (const auto &entry : fs::directory_iterator(f_p))
         {
             if (entry.is_regular_file())
             {
