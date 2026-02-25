@@ -4,30 +4,40 @@
 #include "Vec3.h"
 #include "Ray.h"
 
-class Camera {
+class Camera
+{
 public:
     Vec3 origin;
-    double v_w, v_h;
-    double zooming_ctrl_val = 1.0;
 
-    Camera(Vec3 cam_origin, double viewport_h, double aspect_ratio) {
+    // Camera Vision zooming control variable
+    double z_c = 1.0;
+
+    // Image sizing declaration, defination and assignetion
+    const int i_w = 500; // Horizontal size
+    const int i_h = 300; // Vertical size
+
+    // Aspect Ratio adjosting calculation
+    double a_r = double(i_w) / i_h;
+
+    // Camera Window ViewPort dimension configuration calculating from image H and W
+    double v_h = double(i_h) / 100; // ViewPort H
+    double v_w = a_r * v_h;         // ViewPort W
+
+    Camera(Vec3 cam_origin)
+    {
         origin = cam_origin;
-        
-        v_h = viewport_h; 
-        v_w = aspect_ratio * v_h;
     }
 
-    double get_zoom(){
-        return zooming_ctrl_val;
-    }
+    // Camera Vision Zoom Value Fetcher
+    double get_zm() const { return z_c;}
 
-    Ray get_ray(double u, double v) const {
+    Ray get_ray(double u, double v) const
+    {
         Vec3 direction(
-            v_w * u - (v_w / 2.0), 
-            v_h * v - (v_h / 2.0), 
-            -zooming_ctrl_val
-        );
-        
+            v_w * u - (v_w / 2.0),
+            v_h * v - (v_h / 2.0),
+            -z_c);
+
         return Ray(origin, direction);
     }
 };

@@ -18,48 +18,43 @@ double hit_sphere(const Vec3 &center, double radius, const Ray &r)
 
 int main()
 {
-    std::string path = "./fileb";
 
-    int current_files = FileHelper::count_files("./fileb");
-
-    const int image_width = 500;
-    const int image_height = 300;
-
-    double asp_tio = double(image_width) / image_height;
-
-    double viewport_h = double(image_height) / 100;
-    double viewport_w = asp_tio * viewport_h;
-
-    Camera cam(Vec3(0, 0, 0), viewport_h, asp_tio);
-    double zooming_ctrl_val = cam.get_zoom();
+    // Calling FileHelper class to get name for the next file
+    std::string f_n = FileHelper::file_name();
 
 
-    std::string filename = "./fileb/image" + std::to_string(current_files + 1) + ".ppm";
+    Camera cam(Vec3(0, 0, 0));
 
-    std::ofstream image_file(filename);
+    double z_c_v = cam.get_zm(); // Zooming Control Value
+    int i_h = cam.i_h; // Image Height Size value
+    int i_w = cam.i_w; // Image Width Size value
+    int v_h = cam.v_h; // Viewport Height Size value
+    int v_w = cam.v_w; // Viewport Height Size value
 
-    image_file << "P3\n"
-               << image_width << ' ' << image_height << "\n255\n";
+    std::ofstream i_f(f_n);// image file
+
+    i_f << "P3\n"
+        << i_w << ' ' << i_h << "\n255\n";
 
     Vec3 origin(0, 0, 0);
 
-    const int edges_pixel_smoothness = 100;
-    double lean;
+    const int i_e_s = 100; // making the image edge smoother instead of stairs from 0 - 100
+    double lean; // image contrast len value cin input holder
     std::cin >> lean;
 
-    for (int j = image_height - 1; j >= 0; --j)
+    for (int j = i_h - 1; j >= 0; --j)
     {
-        for (int i = 0; i < image_width; ++i)
+        for (int i = 0; i < i_w; ++i)
         {
 
             Vec3 accumulated_color(0, 0, 0);
 
-            for (int s = 0; s < edges_pixel_smoothness; ++s)
+            for (int s = 0; s < i_e_s; ++s)
             {
-                double u = (double(i) + random_double()) / (image_width - 1);
-                double v = (double(j) + random_double()) / (image_height - 1);
+                double u = (double(i) + random_double()) / (i_w - 1);
+                double v = (double(j) + random_double()) / (i_h - 1);
 
-                Vec3 direction(viewport_w * u - (viewport_w / 2.0), viewport_h * v - (viewport_h / 2.0), -zooming_ctrl_val);
+                Vec3 direction(v_w * u - (v_w / 2.0), v_h * v - (v_h / 2.0), -z_c_v);
 
                 Ray r = cam.get_ray(u, v);
 
@@ -81,11 +76,11 @@ int main()
                 accumulated_color += current_sample_color;
             }
 
-            Vec3 pixel_color = (1.0 / edges_pixel_smoothness) * accumulated_color;
+            Vec3 pixel_color = (1.0 / i_e_s) * accumulated_color;
 
-            image_file << static_cast<int>(255.999 * pixel_color.get_h()) << ' '
-                       << static_cast<int>(255.999 * pixel_color.get_v()) << ' '
-                       << static_cast<int>(255.999 * pixel_color.get_d()) << '\n';
+            i_f << static_cast<int>(255.999 * pixel_color.get_h()) << ' '
+                << static_cast<int>(255.999 * pixel_color.get_v()) << ' '
+                << static_cast<int>(255.999 * pixel_color.get_d()) << '\n';
         }
     }
 }

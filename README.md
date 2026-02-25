@@ -24,6 +24,8 @@ When running the executable, you must provide a light contrast value (e.g., 0.5)
 
 # 🛠 Features
 
-Multi-threaded: Uses -pthread to leverage multi-core processors.
-Optimized: Compiled with -O3 for maximum execution speed.
-Customizable Lighting: Adjust scene contrast directly from the terminal.
+<Multi-threaded: Uses -pthread to leverage multi-core processors.
+
+<Optimized: Compiled with -O3 for maximum execution speed.
+
+<Customizable Lighting: Adjust scene contrast directly from the terminal.
