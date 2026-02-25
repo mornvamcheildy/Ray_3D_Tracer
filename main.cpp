@@ -66,8 +66,10 @@ int main()
                 double u = (double(i) + random_double()) / (i_w - 1);
                 double v = (double(j) + random_double()) / (i_h - 1);
 
+                // Radius variable (r_e radius expand) the expanding of the circle from the enter to infitity
+                double r_e = 0.5;
                 Ray r = cam.get_ray(u, v);
-                double t = hit_sphere(Vec3(0, 0, -1), 0.5, r);
+                double t = hit_sphere(Vec3(0, 0, -1), r_e, r);
 
                 Vec3 current_sample_color;
 
