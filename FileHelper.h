@@ -9,21 +9,23 @@ namespace fs = std::filesystem;
 class FileHelper
 {
 public:
-
     static std::string file_name()
     {
+        // 1. Declare the folder path variable
+        fs::path f_p = "./filea";
 
-        // Path to the folder to count from variable declaration and assignement
-        std::string f_p = "./filea";
+        // 2. Define naming components
+        std::string f_n = "image"; 
+        std::string f_x = ".ppm";
 
-        std::string f_n = f_p + "/image"; // file name start
-        std::string f_x = ".ppm";         // file extension
-
+        // 3. Check if directory exists; if not, return the first name
         if (!fs::exists(f_p) || !fs::is_directory(f_p))
         {
-            return f_n + f_x;
+            // Use / operator to join folder and filename safely
+            return (f_p / (f_n + f_x)).string();
         }
 
+        // 4. Count existing regular files in the directory
         int count = 0;
         for (const auto &entry : fs::directory_iterator(f_p))
         {
@@ -33,10 +35,10 @@ public:
             }
         };
 
-        // Finale file name nomination f_f_n
-        std::string f_f_n = f_n + std::to_string(count + 1) + f_x;
+        // 5. Construct final filename: "./filea/image[count+1].ppm"
+        fs::path f_f_n = f_p / (f_n + std::to_string(count + 1) + f_x);
 
-        return f_f_n;
+        return f_f_n.string();
     }
 };
 

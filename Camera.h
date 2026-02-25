@@ -7,29 +7,22 @@
 class Camera
 {
 public:
+    // Constants calculated once at compile-time
+    static constexpr int    i_w = 500;
+    static constexpr int    i_h = 300;
+    static constexpr double a_r = static_cast<double>(i_w) / i_h;
+
     Vec3 origin;
+    double z_c = 1.0; // Zoom control
 
-    // Camera Vision zooming control variable
-    double z_c = 1.0;
+    // Viewport dimensions
+    double v_h = static_cast<double>(i_h) / 100.0;
+    double v_w = a_r * v_h;
 
-    // Image sizing declaration, defination and assignetion
-    const int i_w = 500; // Horizontal size
-    const int i_h = 300; // Vertical size
+    // Use a Member Initializer List here
+    Camera(Vec3 cam_origin) : origin(cam_origin) {}
 
-    // Aspect Ratio adjosting calculation
-    double a_r = double(i_w) / i_h;
-
-    // Camera Window ViewPort dimension configuration calculating from image H and W
-    double v_h = double(i_h) / 100; // ViewPort H
-    double v_w = a_r * v_h;         // ViewPort W
-
-    Camera(Vec3 cam_origin)
-    {
-        origin = cam_origin;
-    }
-
-    // Camera Vision Zoom Value Fetcher
-    double get_zm() const { return z_c;}
+    double get_zm() const { return z_c; }
 
     Ray get_ray(double u, double v) const
     {
