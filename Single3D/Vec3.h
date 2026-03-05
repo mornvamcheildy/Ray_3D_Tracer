@@ -41,6 +41,7 @@ public:
 inline Vec3 operator+(const Vec3 &u, const Vec3 &v) { return Vec3(u.coord_3d[0] + v.coord_3d[0], u.coord_3d[1] + v.coord_3d[1], u.coord_3d[2] + v.coord_3d[2]); }
 inline Vec3 operator-(const Vec3 &u, const Vec3 &v) { return Vec3(u.coord_3d[0] - v.coord_3d[0], u.coord_3d[1] - v.coord_3d[1], u.coord_3d[2] - v.coord_3d[2]); }
 inline Vec3 operator*(double t, const Vec3 &v) { return Vec3(t * v.coord_3d[0], t * v.coord_3d[1], t * v.coord_3d[2]); }
+
 inline double dot(const Vec3 &u, const Vec3 &v) { return u.coord_3d[0] * v.coord_3d[0] + u.coord_3d[1] * v.coord_3d[1] + u.coord_3d[2] * v.coord_3d[2]; }
 inline Vec3 unit_vector(Vec3 v) { return (1.0 / v.length()) * v; } // KEY FOR 3D DEPTH
 #endif

@@ -30,7 +30,7 @@ int main()
     std::cout << "Resolution : " << i_w << "x" << i_h << "\n";
 
     std::cout << "Enter contrast/lean value: ";
-    double lean;
+    double lean; // Enter contrast/lean value
     std::cin >> lean;
 
     std::ofstream i_f(f_n);
@@ -66,7 +66,14 @@ int main()
                 double u = (double(i) + random_double()) / (i_w - 1);
                 double v = (double(j) + random_double()) / (i_h - 1);
 
-                // Radius variable (r_e radius expand) the expanding of the circle from the enter to infitity
+                /*
+                    Radius variable 
+                    (r_e is short of radius expand) 
+                    The expanding of the circle from the enter to infitity,
+                    0.0 is bo expand at all so a very tiny circle probably invidible or a little dot,
+                    default value is 0.5
+                */
+
                 double r_e = 0.5;
                 Ray r = cam.get_ray(u, v);
                 double t = hit_sphere(Vec3(0, 0, -1), r_e, r);
